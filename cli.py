@@ -1,34 +1,36 @@
 from analyzer import analyze_coin
+from analyzer import analyze_with_forecast
 
 
 def main():
-    print("=== AI Crypto Signal Analyzer ===\n")
+    print("=== AI Crypto Signal + Forecast ===\n")
 
-    # 🔥 Ask user input instead of argparse
-    coin = input("Enter coin (e.g., bitcoin, ethereum, solana): ").strip().lower()
-    days_input = input("Enter number of past days (e.g., 30): ").strip()
+    coin = input("Enter coin: ").strip().lower() or "bitcoin"
+    days = int(input("Past days: ") or 30)
+    future_days = int(input("Future days: ") or 7)
 
-    # Default fallback
-    if not coin:
-        coin = "bitcoin"
+    historical, future, trade = analyze_with_forecast(
+        coin, days, future_days
+    )
 
-    try:
-        days = int(days_input)
-    except:
-        days = 30
+    print("\n--- FUTURE SIGNALS ---\n")
 
-    print(f"\nAnalyzing {coin.upper()} for last {days} days...\n")
+    for f in future:
+        print(f"Day {f['day']}")
+        print(f"Price: {f['price']:.2f}")
+        print(f"RSI: {f['rsi']:.2f}")
+        print(f"Signal: {f['signal']} (Score: {f['score']})")
+        print("-" * 30)
 
-    results = analyze_coin(coin, days)
+    print("\n--- BEST TRADE ---\n")
 
-    for r in results[-5:]:  # last 5 days
-        print(f"Date: {r['date']}")
-        print(f"Price: {r['price']:.2f}")
-        print(f"RSI: {r['rsi']:.2f}")
-        print(f"MA: {r['ma']:.2f}")
-        print(f"Signal: {r['signal']} (Score: {r['score']})")
-        print(f"Reasons: {', '.join(r['reasons'])}")
-        print("-" * 40)
+    if trade["best_buy"]:
+        print(f"Best BUY → Day {trade['best_buy']['day']} @ {trade['best_buy']['price']:.2f}")
+
+    if trade["best_sell"]:
+        print(f"Best SELL → Day {trade['best_sell']['day']} @ {trade['best_sell']['price']:.2f}")
+
+    print(f"Expected Profit: {trade['expected_profit_pct']:.2f}%")
 
 
 if __name__ == "__main__":

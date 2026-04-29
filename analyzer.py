@@ -1,6 +1,8 @@
 from data_fetch import fetch_price_data
 from indicators import apply_indicators
 from signal_engine import generate_signal
+from forecast import project_future
+from strategy import find_best_trade
 
 
 def analyze_coin(coin="bitcoin", days=30):
@@ -23,3 +25,23 @@ def analyze_coin(coin="bitcoin", days=30):
         })
 
     return results
+
+def analyze_with_forecast(coin="bitcoin", days=30, future_days=7):
+    df = fetch_price_data(coin, days)
+    df = apply_indicators(df)
+
+    historical = []
+
+    for _, row in df.iterrows():
+        signal, score, reasons = generate_signal(row)
+
+        historical.append({
+            "date": row["timestamp"].strftime("%Y-%m-%d"),
+            "price": float(row["price"]),
+            "signal": signal
+        })
+
+    future = project_future(df, future_days)
+    trade = find_best_trade(future)
+
+    return historical, future, trade
