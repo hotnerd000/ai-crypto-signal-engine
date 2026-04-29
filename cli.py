@@ -5,6 +5,12 @@ from ai_explainer import explain_coin
 from portfolio import allocate_portfolio, apply_risk_management, generate_orders
 from data_fetch import get_current_prices
 from positions import evaluate_position
+from backtest import Backtester, calculate_metrics
+from data_fetch import fetch_price_data
+from indicators import apply_indicators
+from signal_engine import generate_signal
+import os
+import subprocess
 
 PREDEFINED_COINS = {
     "bitcoin": "BTC",
@@ -16,6 +22,31 @@ PREDEFINED_COINS = {
     "polkadot": "DOT",
     "tron": "TRX"
 }
+
+def clear_screen():
+    if os.name == "nt":
+        subprocess.run(["cls"], shell=True)
+    else:
+        subprocess.run(["clear"])
+
+def single_mode():
+    coin = input("Enter coin: ") or "bitcoin"
+    days = int(input("Days: ") or 30)
+
+    df = fetch_price_data(coin, days)
+
+    df = apply_indicators(df)
+
+    print("\n=== SIGNALS ===\n")
+
+    for _, row in df.tail(5).iterrows():
+        signal, score, reasons = generate_signal(row)
+
+        print(f"Price: {row['price']:.2f}")
+        print(f"Signal: {signal}")
+        print(f"Score: {score}")
+        print(f"Reasons: {', '.join(reasons)}")
+        print("-" * 40)
 
 def multi_coin_mode():
     coins = list(PREDEFINED_COINS.keys())
@@ -103,76 +134,141 @@ def multi_coin_mode():
         print(f"  Reason: {reason}")
         print("-" * 40)
 
+def run_backtest():
+    coin = input("Enter coin: ") or "bitcoin"
+    days = int(input("Days: ") or 90)
+
+    df = fetch_price_data(coin, days)
+
+    bt = Backtester(initial_balance=1000)
+    result = bt.run(df, coin)
+
+    metrics = calculate_metrics(result)
+
+    print("\n=== BACKTEST RESULT ===\n")
+
+    print(f"Final Portfolio Value: ${result['portfolio_value'].iloc[-1]:.2f}")
+    print(f"Total Return: {metrics['total_return_pct']:.2f}%")
+    print(f"Win Rate: {metrics['win_rate']:.2f}%")
+    print(f"Max Drawdown: {metrics['max_drawdown_pct']:.2f}%")
+
 def main():
-    print("=== AI Crypto Signal + Forecast ===\n")
-
+    clear_screen()  # 🔥 add here
+    print("\n=== AI Crypto Trading System ===\n")
     print("1. Single Coin Analysis")
-    print("2. Multi-Coin Ranking")
+    print("2. Multi Coin Analysis")
+    print("3. Backtest Strategy")
+    print("0. Exit")
 
-    choice = input("Select mode: ").strip()
+    choice = input("Select: ").strip()
 
-    if choice == "2":
+    if choice == "1":
+        single_mode()
+
+    elif choice == "2":
         multi_coin_mode()
-        return
 
-    # 🔥 Show available coins
-    print("Available Coins:")
-    for i, (coin_id, symbol) in enumerate(PREDEFINED_COINS.items(), start=1):
-        print(f"{i}. {coin_id} ({symbol})")
+    elif choice == "3":
+        run_backtest()
 
-    print("\nYou can type coin name (e.g., bitcoin) or number (e.g., 1)\n")
+    elif choice == "0":
+        return False  # 🔥 signal to stop loop
 
-    # 🔥 User input
-    user_input = input("Select coin: ").strip().lower()
-
-    # Handle number input
-    if user_input.isdigit():
-        index = int(user_input) - 1
-        coin_list = list(PREDEFINED_COINS.keys())
-
-        if 0 <= index < len(coin_list):
-            coin = coin_list[index]
-        else:
-            print("Invalid selection. Defaulting to bitcoin.")
-            coin = "bitcoin"
     else:
-        coin = user_input if user_input in PREDEFINED_COINS else "bitcoin"
+        print("Invalid choice")
 
-    # Other inputs
-    try:
-        days = int(input("Past days: ") or 30)
-    except:
-        days = 30
+    return True  # 🔥 keep running
 
-    try:
-        future_days = int(input("Future days: ") or 7)
-    except:
-        future_days = 7
+    # choice = input("Select mode: ").strip()
 
-    print(f"\nAnalyzing {coin.upper()}...\n")
+    # if choice == "2":
+    #     multi_coin_mode()
+    #     return
+    # elif choice == "3":
+    #     coin = input("Enter coin: ") or "bitcoin"
+    #     days = int(input("Days: ") or 90)
 
-    historical, future, trade = analyze_with_forecast(
-        coin, days, future_days
-    )
+    #     df = fetch_price_data(coin, days)
 
-    print("\n--- FUTURE SIGNALS ---\n")
+    #     bt = Backtester(initial_balance=1000)
+    #     result = bt.run(df, coin)
 
-    for f in future:
-        print(f"Day {f['day']}")
-        print(f"Price: {f['price']:.2f}")
-        print(f"Signal: {f['signal']} (Score: {f['score']})")
-        print("-" * 30)
+    #     metrics = calculate_metrics(result)
 
-    print("\n--- BEST TRADE ---\n")
+    #     print("\n=== BACKTEST RESULT ===\n")
 
-    if trade["best_buy"]:
-        print(f"Best BUY → Day {trade['best_buy']['day']} @ {trade['best_buy']['price']:.2f}")
+    #     print(f"Final Portfolio Value: ${result['portfolio_value'].iloc[-1]:.2f}")
+    #     print(f"Total Return: {metrics['total_return_pct']:.2f}%")
+    #     print(f"Win Rate: {metrics['win_rate']:.2f}%")
+    #     print(f"Max Drawdown: {metrics['max_drawdown_pct']:.2f}%")
+    #     return
 
-    if trade["best_sell"]:
-        print(f"Best SELL → Day {trade['best_sell']['day']} @ {trade['best_sell']['price']:.2f}")
+    # # 🔥 Show available coins
+    # print("Available Coins:")
+    # for i, (coin_id, symbol) in enumerate(PREDEFINED_COINS.items(), start=1):
+    #     print(f"{i}. {coin_id} ({symbol})")
 
-    print(f"Expected Profit: {trade['expected_profit_pct']:.2f}%")
+    # print("\nYou can type coin name (e.g., bitcoin) or number (e.g., 1)\n")
+
+    # # 🔥 User input
+    # user_input = input("Select coin: ").strip().lower()
+
+    # # Handle number input
+    # if user_input.isdigit():
+    #     index = int(user_input) - 1
+    #     coin_list = list(PREDEFINED_COINS.keys())
+
+    #     if 0 <= index < len(coin_list):
+    #         coin = coin_list[index]
+    #     else:
+    #         print("Invalid selection. Defaulting to bitcoin.")
+    #         coin = "bitcoin"
+    # else:
+    #     coin = user_input if user_input in PREDEFINED_COINS else "bitcoin"
+
+    # # Other inputs
+    # try:
+    #     days = int(input("Past days: ") or 30)
+    # except:
+    #     days = 30
+
+    # try:
+    #     future_days = int(input("Future days: ") or 7)
+    # except:
+    #     future_days = 7
+
+    # print(f"\nAnalyzing {coin.upper()}...\n")
+
+    # historical, future, trade = analyze_with_forecast(
+    #     coin, days, future_days
+    # )
+
+    # print("\n--- FUTURE SIGNALS ---\n")
+
+    # for f in future:
+    #     print(f"Day {f['day']}")
+    #     print(f"Price: {f['price']:.2f}")
+    #     print(f"Signal: {f['signal']} (Score: {f['score']})")
+    #     print("-" * 30)
+
+    # print("\n--- BEST TRADE ---\n")
+
+    # if trade["best_buy"]:
+    #     print(f"Best BUY → Day {trade['best_buy']['day']} @ {trade['best_buy']['price']:.2f}")
+
+    # if trade["best_sell"]:
+    #     print(f"Best SELL → Day {trade['best_sell']['day']} @ {trade['best_sell']['price']:.2f}")
+
+    # print(f"Expected Profit: {trade['expected_profit_pct']:.2f}%")
+
 
 
 if __name__ == "__main__":
-    main()
+    while True:
+        should_continue = main()
+
+        if not should_continue:
+            print("\nGoodbye 👋")
+            break
+
+        input("\nPress Enter to continue...")
