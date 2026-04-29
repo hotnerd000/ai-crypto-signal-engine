@@ -1,4 +1,7 @@
 from analyzer import analyze_with_forecast
+from multi_coin import analyze_multiple
+from ranking import rank_coins
+from ai_explainer import explain_coin
 
 PREDEFINED_COINS = {
     "bitcoin": "BTC",
@@ -11,8 +14,36 @@ PREDEFINED_COINS = {
     "tron": "TRX"
 }
 
+def multi_coin_mode():
+    coins = list(PREDEFINED_COINS.keys())
+
+    print("\nAnalyzing multiple coins...\n")
+
+    results = analyze_multiple(coins, days=30, future_days=7)
+    ranked = rank_coins(results)
+
+    print("\n=== COIN RANKING ===\n")
+
+    for i, r in enumerate(ranked, start=1):
+        print(f"{i}. {r['coin'].upper()}")
+        print(f"   Score: {r['avg_score']:.2f}")
+        print(f"   Expected Profit: {r['expected_profit']:.2f}%")
+
+        # 🔥 AI explanation
+        explanation = explain_coin(r)
+        print(f"   AI Insight: {explanation[:200]}...\n")
+
 def main():
     print("=== AI Crypto Signal + Forecast ===\n")
+
+    print("1. Single Coin Analysis")
+    print("2. Multi-Coin Ranking")
+
+    choice = input("Select mode: ").strip()
+
+    if choice == "2":
+        multi_coin_mode()
+        return
 
     # 🔥 Show available coins
     print("Available Coins:")
