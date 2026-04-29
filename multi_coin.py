@@ -1,4 +1,6 @@
 from analyzer import analyze_with_forecast
+from ai_decision import get_ai_decision
+from decision_engine import combine_decision
 
 def analyze_multiple(coins, days=30, future_days=7):
     results = []
@@ -19,5 +21,41 @@ def analyze_multiple(coins, days=30, future_days=7):
 
         except Exception as e:
             print(f"Error analyzing {coin}: {e}")
+
+    return results
+
+
+def analyze_multiple(coins, days=30, future_days=7):
+    results = []
+
+    for coin in coins:
+        try:
+            _, future, trade = analyze_with_forecast(coin, days, future_days)
+
+            avg_score = sum([f["score"] for f in future]) / len(future)
+
+            # 🔥 AI decision
+            ai = get_ai_decision({
+                "coin": coin,
+                "score": avg_score,
+                "expected_profit": trade["expected_profit_pct"]
+            })
+
+            final_decision = combine_decision(
+                avg_score,
+                ai["decision"],
+                ai["confidence"]
+            )
+
+            results.append({
+                "coin": coin,
+                "avg_score": avg_score,
+                "expected_profit": trade["expected_profit_pct"],
+                "final_decision": final_decision,
+                "ai_confidence": ai["confidence"]
+            })
+
+        except Exception as e:
+            print(f"Error: {coin} → {e}")
 
     return results

@@ -26,12 +26,11 @@ def multi_coin_mode():
 
     for i, r in enumerate(ranked, start=1):
         print(f"{i}. {r['coin'].upper()}")
-        print(f"   Score: {r['avg_score']:.2f}")
+        print(f"   Rule Score: {r['avg_score']:.2f}")
         print(f"   Expected Profit: {r['expected_profit']:.2f}%")
-
-        # 🔥 AI explanation
-        explanation = explain_coin(r)
-        print(f"   AI Insight: {explanation[:200]}...\n")
+        print(f"   Final Decision: {r['final_decision']}")
+        print(f"   AI Confidence: {r['ai_confidence']:.2f}")
+        print("-" * 40)
 
 def main():
     print("=== AI Crypto Signal + Forecast ===\n")
