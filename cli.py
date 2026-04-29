@@ -2,6 +2,7 @@ from analyzer import analyze_with_forecast
 from multi_coin import analyze_multiple
 from ranking import rank_coins
 from ai_explainer import explain_coin
+from portfolio import allocate_portfolio, apply_risk_management, generate_orders
 
 PREDEFINED_COINS = {
     "bitcoin": "BTC",
@@ -30,6 +31,36 @@ def multi_coin_mode():
         print(f"   Expected Profit: {r['expected_profit']:.2f}%")
         print(f"   Final Decision: {r['final_decision']}")
         print(f"   AI Confidence: {r['ai_confidence']:.2f}")
+        print("-" * 40)
+
+    print("\n=== PORTFOLIO ALLOCATION ===\n")
+
+    portfolio = allocate_portfolio(ranked, total_balance=1000)
+    portfolio = apply_risk_management(portfolio)
+
+    # mock prices (replace later with real data)
+    prices = {r["coin"]: 100 for r in portfolio}
+
+    orders = generate_orders(portfolio, prices)
+
+    # 🔥 Show portfolio
+    for p in portfolio:
+        print(f"{p['coin'].upper()}")
+        print(f"  Allocation: {p['allocation_pct']*100:.2f}%")
+        print(f"  USD: ${p['allocation_usd']:.2f}")
+        print(f"  Stop Loss: {p['stop_loss_pct']*100:.1f}%")
+        print(f"  Take Profit: {p['take_profit_pct']:.1f}%")
+        print("-" * 40)
+
+    # 🔥 Show orders (optional but very useful)
+    print("\n=== EXECUTION PLAN ===\n")
+
+    for o in orders:
+        print(f"BUY {o['coin'].upper()}")
+        print(f"  Amount: ${o['usd']:.2f}")
+        print(f"  Quantity: {o['quantity']:.6f}")
+        print(f"  Stop Loss: {o['stop_loss']*100:.1f}%")
+        print(f"  Take Profit: {o['take_profit']*100:.1f}%")
         print("-" * 40)
 
 def main():
