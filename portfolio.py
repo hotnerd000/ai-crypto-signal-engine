@@ -7,17 +7,26 @@ def allocate_portfolio(results, total_balance=1000, max_per_coin=0.3):
         return []
 
     for r in candidates:
-        r["weight_score"] = (
+        base_score = (
             r["avg_score"] * 0.4 +
             r["expected_profit"] * 0.4 +
             r["ai_confidence"] * 0.2
         )
 
+        vol = r.get("volatility", 0.01)
+
+        if vol == 0:
+            vol = 0.01
+
+        r["weight_score"] = base_score / vol
+
+    # 🔄 normalize
     total_weight = sum(r["weight_score"] for r in candidates)
 
     for r in candidates:
         r["allocation_pct"] = r["weight_score"] / total_weight
 
+    # 🔄 cap per coin
     for r in candidates:
         r["allocation_pct"] = min(r["allocation_pct"], max_per_coin)
 
@@ -26,6 +35,7 @@ def allocate_portfolio(results, total_balance=1000, max_per_coin=0.3):
     for r in candidates:
         r["allocation_pct"] /= total_pct
 
+    # 🔄 USD allocation
     for r in candidates:
         r["allocation_usd"] = r["allocation_pct"] * total_balance
 
@@ -35,7 +45,12 @@ def allocate_portfolio(results, total_balance=1000, max_per_coin=0.3):
 # 🔥 ADD THIS RIGHT BELOW
 def apply_risk_management(portfolio, stop_loss=0.05):
     for p in portfolio:
-        p["stop_loss_pct"] = stop_loss
+        vol = p.get("volatility", 0.02)
+
+        # 🔥 dynamic stop loss based on volatility
+        p["stop_loss_pct"] = max(0.03, min(0.15, vol * 3))
+
+        # take profit stays based on expected return
         p["take_profit_pct"] = p["expected_profit"] / 100
 
     return portfolio

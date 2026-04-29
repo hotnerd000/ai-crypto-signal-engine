@@ -1,6 +1,8 @@
 from analyzer import analyze_with_forecast
 from ai_decision import get_ai_decision
 from decision_engine import combine_decision
+from data_fetch import get_price_series
+from risk import calculate_volatility
 
 def analyze_multiple(coins, days=30, future_days=7):
     results = []
@@ -47,12 +49,16 @@ def analyze_multiple(coins, days=30, future_days=7):
                 ai["confidence"]
             )
 
+            price_series = get_price_series(coin, days)
+            volatility = calculate_volatility(price_series)
+
             results.append({
                 "coin": coin,
                 "avg_score": avg_score,
                 "expected_profit": trade["expected_profit_pct"],
                 "final_decision": final_decision,
-                "ai_confidence": ai["confidence"]
+                "ai_confidence": ai["confidence"],
+                "volatility": volatility
             })
 
         except Exception as e:

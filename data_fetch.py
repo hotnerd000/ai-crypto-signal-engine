@@ -30,3 +30,7 @@ def get_current_prices(coins):
         prices[coin] = data.get(coin, {}).get("usd", 0)
 
     return prices
+
+def get_price_series(coin, days=30):
+    df = fetch_price_data(coin, days)
+    return df["price"].tolist()
