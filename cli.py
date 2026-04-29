@@ -4,6 +4,7 @@ from ranking import rank_coins
 from ai_explainer import explain_coin
 from portfolio import allocate_portfolio, apply_risk_management, generate_orders
 from data_fetch import get_current_prices
+from positions import evaluate_position
 
 PREDEFINED_COINS = {
     "bitcoin": "BTC",
@@ -66,6 +67,40 @@ def multi_coin_mode():
         print(f"  Quantity: {o['quantity']:.6f}")
         print(f"  Stop Loss: {o['stop_loss']*100:.1f}%")
         print(f"  Take Profit: {o['take_profit']*100:.1f}%")
+        print("-" * 40)
+
+    print("\n=== POSITION MONITOR ===\n")
+
+    for o in orders:
+        coin = o["coin"]
+        entry_price = o["price"]
+
+        # 🔥 Use REAL current price (replace mock)
+        current_prices = get_current_prices([coin])
+        current_price = current_prices.get(coin, entry_price)
+
+        # 🔥 get latest signal (simple version)
+        signal = "HOLD"
+        for r in ranked:
+            if r["coin"] == coin:
+                signal = r["final_decision"]
+
+        decision, reason = evaluate_position(
+            {
+                "coin": coin,
+                "entry_price": entry_price,
+                "stop_loss": o["stop_loss"],
+                "take_profit": o["take_profit"]
+            },
+            current_price,
+            signal  # 👈 NEW
+        )
+
+        print(f"{coin.upper()}")
+        print(f"  Entry: {entry_price:.2f}")
+        print(f"  Current: {current_price:.2f}")
+        print(f"  Decision: {decision}")
+        print(f"  Reason: {reason}")
         print("-" * 40)
 
 def main():

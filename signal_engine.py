@@ -10,7 +10,7 @@ def generate_signal(row):
         score -= 1
         reasons.append("RSI overbought (SELL)")
 
-    # Moving Average
+    # MA
     if row["price"] > row["ma"]:
         score += 1
         reasons.append("Price above MA (bullish)")
@@ -18,12 +18,14 @@ def generate_signal(row):
         score -= 1
         reasons.append("Price below MA (bearish)")
 
-    # Final decision
-    if score >= 1:
-        signal = "BUY"
-    elif score <= -1:
-        signal = "SELL"
-    else:
-        signal = "HOLD"
+    # 🔥 Strong SELL override
+    if row["rsi"] > 75 and row["price"] < row["ma"]:
+        return "SELL", -2, ["Strong reversal signal"]
 
-    return signal, score, reasons
+    # Final
+    if score >= 1:
+        return "BUY", score, reasons
+    elif score <= -1:
+        return "SELL", score, reasons
+    else:
+        return "HOLD", score, reasons
