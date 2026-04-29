@@ -4,7 +4,7 @@ import pandas as pd
 def fetch_price_data(coin="bitcoin", days=30):
     url = f"https://api.coingecko.com/api/v3/coins/{coin}/market_chart?vs_currency=usd&days={days}"
     
-    res = requests.get(url)
+    res = requests.get(url, timeout=10)
     data = res.json()
 
     prices = data["prices"]
@@ -13,3 +13,20 @@ def fetch_price_data(coin="bitcoin", days=30):
     df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
 
     return df
+
+def get_current_prices(coins):
+    """
+    coins: list like ["bitcoin", "ethereum"]
+    """
+    ids = ",".join(coins)
+
+    url = f"https://api.coingecko.com/api/v3/simple/price?ids={ids}&vs_currencies=usd"
+
+    res = requests.get(url, timeout=10)
+    data = res.json()
+
+    prices = {}
+    for coin in coins:
+        prices[coin] = data.get(coin, {}).get("usd", 0)
+
+    return prices

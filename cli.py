@@ -3,6 +3,7 @@ from multi_coin import analyze_multiple
 from ranking import rank_coins
 from ai_explainer import explain_coin
 from portfolio import allocate_portfolio, apply_risk_management, generate_orders
+from data_fetch import get_current_prices
 
 PREDEFINED_COINS = {
     "bitcoin": "BTC",
@@ -38,10 +39,14 @@ def multi_coin_mode():
     portfolio = allocate_portfolio(ranked, total_balance=1000)
     portfolio = apply_risk_management(portfolio)
 
-    # mock prices (replace later with real data)
-    prices = {r["coin"]: 100 for r in portfolio}
+    coins = [p["coin"] for p in portfolio]
+    prices = get_current_prices(coins)
 
     orders = generate_orders(portfolio, prices)
+
+    if not portfolio:
+        print("No BUY signals. No trades executed.")
+        return
 
     # 🔥 Show portfolio
     for p in portfolio:
