@@ -1,7 +1,6 @@
 import pandas as pd
 from indicators.indicators import apply_indicators
-from signals.signal_engine import generate_signal
-
+from strategy.decision_engine import decide_action
 
 class Backtester:
     def __init__(self, initial_balance=1000):
@@ -12,11 +11,21 @@ class Backtester:
     def run(self, df, coin):
         df = apply_indicators(df)
 
-        for _, row in df.iterrows():
+        for i, row in df.iterrows():
             price = float(row["price"])
             date = row["timestamp"]
 
-            signal, score, _ = generate_signal(row)
+            # 🔥 ONLY past data (no leakage)
+            past_df = df.iloc[:i+1]
+
+            decision = decide_action(
+                coin,
+                row,
+                past_df,
+                use_forecast=False  # 🔥 VERY IMPORTANT
+            )
+
+            signal = decision["decision"]
 
             # 🔥 BUY logic
             if signal == "BUY" and coin not in self.positions:
@@ -41,7 +50,7 @@ class Backtester:
             # 🔥 Track portfolio value
             portfolio_value = self.balance
 
-            for c, pos in self.positions.items():
+            for pos in self.positions.items():
                 portfolio_value += pos["quantity"] * price
 
             self.history.append({

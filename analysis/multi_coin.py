@@ -1,5 +1,5 @@
 from analysis.analyzer import analyze_with_forecast
-from ai.ai_decision import get_ai_decision
+from ai.ai_decisions import get_ai_decision
 from strategy.decision_engine import combine_decision
 from data.data_fetch import get_price_series
 from portfolio.risk import calculate_volatility

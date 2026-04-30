@@ -2,8 +2,8 @@ import requests
 import json
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-#MODEL = "llama3" qwen3.6   # change if needed
-MODEL = "mistral"
+#MODEL = "llama3" qwen3.6 mistral   # change if needed
+MODEL = "qwen3.6"
 
 
 

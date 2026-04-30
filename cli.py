@@ -10,7 +10,9 @@ from backtest.backtest import Backtester, calculate_metrics
 
 from indicators.indicators import apply_indicators
 from signals.signal_engine import generate_signal
+from strategy.decision_engine import decide_action
 from utils.helpers import clear_screen
+
 
 PREDEFINED_COINS = {
     "bitcoin": "BTC",
@@ -63,6 +65,28 @@ def single_mode():
         future_days = 7
 
     print(f"\nAnalyzing {coin.upper()}...\n")
+
+     # 🔥 CURRENT DECISION (AI + STRATEGY)
+    print("\n--- CURRENT DECISION ---\n")
+
+    df = fetch_price_data(coin, days)
+    df = apply_indicators(df)
+
+    latest_row = df.iloc[-1]
+
+    decision = decide_action(
+        coin=coin,
+        row=latest_row,
+        df=df
+    )
+
+    print(f"Current Price: {latest_row['price']:.2f}")
+    print(f"Decision: {decision['decision']}")
+    print(f"Confidence: {decision['confidence']}")
+
+    print("\nComponents:")
+    for k, v in decision["components"].items():
+        print(f"  {k}: {v}")
 
     # 🔥 Core analysis
     historical, future, trade = analyze_with_forecast(
