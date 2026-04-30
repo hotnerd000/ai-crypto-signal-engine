@@ -32,12 +32,13 @@ def decide_action(coin, row, df):
     signal, score, signal_reasons = generate_signal(row)
     reasons.extend(signal_reasons)
 
-    print(f"\nAI Decision----\n")
+    print(f"\nAI Signaling...----\n")
     # 🔥 AI decision
     ai_result = get_ai_signal(coin, row)
     ai_decision = ai_result.get("decision", "HOLD")
     ai_confidence = ai_result.get("confidence", 0.5)
 
+    print(f"\nAI Signaling Finished...----\n")
     # 🧠 Combine logic
     score_total = 0
 

@@ -29,7 +29,7 @@ def project_future(coin, df, days_ahead=7):
             "ma": ma
         }
 
-        print(f"\nCalling Decide Decision----\n")
+        print(f"\nCalling Decide Action----\n")
         decision = decide_action(coin, simulated_row, df.iloc[:])
 
         results.append({
