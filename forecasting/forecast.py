@@ -1,6 +1,7 @@
 from strategy.decision_engine import decide_action
 
 def project_future(coin, df, days_ahead=7):
+    print(f"\nProject Future\n")
     last_row = df.iloc[-1]
 
     price = float(last_row["price"])
@@ -28,6 +29,7 @@ def project_future(coin, df, days_ahead=7):
             "ma": ma
         }
 
+        print(f"\nCalling Decide Decision----\n")
         decision = decide_action(coin, simulated_row, df.iloc[:])
 
         results.append({

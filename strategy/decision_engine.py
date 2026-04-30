@@ -1,5 +1,5 @@
 from signals.signal_engine import generate_signal
-from ai.ai_decisions import get_ai_decision
+from ai.ai_decisions import get_ai_signal
 
 def combine_decision(rule_score, ai_decision, ai_confidence):
     # Normalize rule score
@@ -27,12 +27,14 @@ def combine_decision(rule_score, ai_decision, ai_confidence):
 def decide_action(coin, row, df):
     reasons = []
 
+    print(f"\nGenerate Signals----\n")
     # 🔥 Technical signal
     signal, score, signal_reasons = generate_signal(row)
     reasons.extend(signal_reasons)
 
+    print(f"\nAI Decision----\n")
     # 🔥 AI decision
-    ai_result = get_ai_decision(row)
+    ai_result = get_ai_signal(coin, row)
     ai_decision = ai_result.get("decision", "HOLD")
     ai_confidence = ai_result.get("confidence", 0.5)
 

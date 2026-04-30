@@ -88,6 +88,8 @@ def single_mode():
     for k, v in decision["components"].items():
         print(f"  {k}: {v}")
 
+    print(f"\nFocasting...\n")
+
     # 🔥 Core analysis
     historical, future, trade = analyze_with_forecast(
         coin, days, future_days

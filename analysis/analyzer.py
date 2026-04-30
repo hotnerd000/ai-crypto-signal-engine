@@ -41,7 +41,9 @@ def analyze_with_forecast(coin="bitcoin", days=30, future_days=7):
             "signal": signal
         })
 
+    
     future = project_future(coin, df, future_days)
+    print(f"\nFind Beset Trade\n")
     trade = find_best_trade(future)
 
     return historical, future, trade

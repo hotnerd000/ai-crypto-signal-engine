@@ -1,5 +1,5 @@
 from analysis.analyzer import analyze_with_forecast
-from ai.ai_decisions import get_ai_decision
+from ai.ai_decisions import get_ai_decision_from_summary
 from strategy.decision_engine import combine_decision
 from data.data_fetch import get_price_series
 from portfolio.risk import calculate_volatility
@@ -37,7 +37,7 @@ def analyze_multiple(coins, days=30, future_days=7):
             avg_score = sum([f["score"] for f in future]) / len(future)
 
             # 🔥 AI decision
-            ai = get_ai_decision({
+            ai = get_ai_decision_from_summary({
                 "coin": coin,
                 "score": avg_score,
                 "expected_profit": trade["expected_profit_pct"]
