@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 
-def fetch_price_data(coin="bitcoin", days=30):
+def get_historical_prices(coin="bitcoin", days=30):
     url = f"https://api.coingecko.com/api/v3/coins/{coin}/market_chart?vs_currency=usd&days={days}"
     
     print(f"\nFetching price data {coin.upper()}...\n")
@@ -35,5 +35,5 @@ def get_current_prices(coins):
     return prices
 
 def get_price_series(coin, days=30):
-    df = fetch_price_data(coin, days)
+    df = get_historical_prices(coin, days)
     return df["price"].tolist()

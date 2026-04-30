@@ -1,4 +1,4 @@
-from signals.signal_engine import generate_signal
+from signals.rule_signals import generate_signal
 from ai.ai_decisions import get_ai_signal
 
 def combine_decision(rule_score, ai_decision, ai_confidence):
@@ -24,7 +24,7 @@ def combine_decision(rule_score, ai_decision, ai_confidence):
     # Low confidence → trust rules
     return rule
 
-def decide_action(coin, row, df):
+def generate_trade_decision(coin, row, df):
     reasons = []
 
     print(f"\nGenerate Signals----\n")

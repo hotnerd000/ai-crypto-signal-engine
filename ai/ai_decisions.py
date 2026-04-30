@@ -7,7 +7,7 @@ MODEL = "mistral"
 
 
 
-def get_ai_decision_from_summary(data):
+def get_ai_portfolio_signal(data):
     prompt = f"""
 You are a crypto trading decision engine.
 

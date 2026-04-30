@@ -1,16 +1,16 @@
-from analysis.analyzer import analyze_with_forecast
+from analysis.market_analysis import analyze_with_forecast
 from analysis.multi_coin import analyze_multiple
 from analysis.ranking import rank_coins
 from ai import explain_coin
 from portfolio.portfolio import allocate_portfolio, apply_risk_management, generate_orders
 from data.data_fetch import get_current_prices
-from data.data_fetch import fetch_price_data
+from data.data_fetch import get_historical_prices
 from portfolio.positions import evaluate_position
 from backtest.backtest import Backtester, calculate_metrics
 
 from indicators.indicators import apply_indicators
-from signals.signal_engine import generate_signal
-from strategy.decision_engine import decide_action
+from signals.rule_signals import generate_signal
+from strategy.trade_engine import decide_action
 from utils.helpers import clear_screen
 
 
@@ -26,7 +26,7 @@ PREDEFINED_COINS = {
 }
 
 
-def single_mode():
+def run_single_analysis():
     # 🔥 Show available coins
     print("Available Coins:")
     for i, (coin_id, symbol) in enumerate(PREDEFINED_COINS.items(), start=1):
@@ -69,7 +69,7 @@ def single_mode():
      # 🔥 CURRENT DECISION (AI + STRATEGY)
     print("\n--- CURRENT DECISION ---\n")
 
-    df = fetch_price_data(coin, days)
+    df = get_historical_prices(coin, days)
     df = apply_indicators(df)
 
     latest_row = df.iloc[-1]
@@ -205,7 +205,7 @@ def run_backtest():
     coin = input("Enter coin: ") or "bitcoin"
     days = int(input("Days: ") or 90)
 
-    df = fetch_price_data(coin, days)
+    df = get_historical_prices(coin, days)
 
     bt = Backtester(initial_balance=1000)
     result = bt.run(df, coin)

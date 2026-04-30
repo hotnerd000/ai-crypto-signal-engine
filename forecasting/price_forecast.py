@@ -1,6 +1,6 @@
-from strategy.decision_engine import decide_action
+from strategy.trade_engine import decide_action
 
-def project_future(coin, df, days_ahead=7):
+def forecast_prices(coin, df, days_ahead=7):
     print(f"\nProject Future\n")
     last_row = df.iloc[-1]
 

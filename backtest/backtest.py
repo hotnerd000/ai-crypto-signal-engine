@@ -1,6 +1,6 @@
 import pandas as pd
 from indicators.indicators import apply_indicators
-from strategy.decision_engine import decide_action
+from strategy.trade_engine import decide_action
 
 class Backtester:
     def __init__(self, initial_balance=1000):
@@ -8,7 +8,7 @@ class Backtester:
         self.positions = {}  # coin → {entry_price, quantity}
         self.history = []
 
-    def run(self, df, coin):
+    def run_backtest(self, df, coin):
         df = apply_indicators(df)
 
         for i, row in df.iterrows():
@@ -63,7 +63,7 @@ class Backtester:
 
         return pd.DataFrame(self.history)
     
-def calculate_metrics(df):
+def compute_performance_metrics(df):
     returns = df["portfolio_value"].pct_change().dropna()
 
     total_return = (df["portfolio_value"].iloc[-1] / df["portfolio_value"].iloc[0]) - 1

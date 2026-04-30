@@ -1,4 +1,4 @@
-def generate_signal(row):
+def generate_rule_signal(row):
     score = 0
     reasons = []
 
