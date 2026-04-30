@@ -1,8 +1,8 @@
 from data.data_fetch import fetch_price_data
-from indicators import apply_indicators
+from indicators.indicators import apply_indicators
 from signals.signal_engine import generate_signal
 from forecasting.forecast import project_future
-from strategy import find_best_trade
+from strategy.strategy import find_best_trade
 
 
 def analyze_coin(coin="bitcoin", days=30):

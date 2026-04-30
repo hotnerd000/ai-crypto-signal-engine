@@ -1,5 +1,5 @@
 import pandas as pd
-from indicators import apply_indicators
+from indicators.indicators import apply_indicators
 from signals.signal_engine import generate_signal
 
 

@@ -1,15 +1,16 @@
 from analysis.analyzer import analyze_with_forecast
 from analysis.multi_coin import analyze_multiple
 from analysis.ranking import rank_coins
-from ai.ai_explainer import explain_coin
-from portfolio import allocate_portfolio, apply_risk_management, generate_orders
+from ai import explain_coin
+from portfolio.portfolio import allocate_portfolio, apply_risk_management, generate_orders
 from data.data_fetch import get_current_prices
 from data.data_fetch import fetch_price_data
 from portfolio.positions import evaluate_position
-from backtest import Backtester, calculate_metrics
+from backtest.backtest import Backtester, calculate_metrics
 
-from indicators import apply_indicators
+from indicators.indicators import apply_indicators
 from signals.signal_engine import generate_signal
+from utils.helpers import clear_screen
 
 PREDEFINED_COINS = {
     "bitcoin": "BTC",
