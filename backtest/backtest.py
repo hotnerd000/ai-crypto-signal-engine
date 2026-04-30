@@ -1,6 +1,6 @@
 import pandas as pd
 from indicators.indicators import compute_indicators
-from strategy.trade_engine import generate_trade_decision
+from strategy.trade_decision import generate_trade_decision
 
 class Backtester:
     def __init__(self, initial_balance=1000):
@@ -21,8 +21,7 @@ class Backtester:
             decision = generate_trade_decision(
                 coin,
                 row,
-                past_df,
-                use_forecast=False  # 🔥 VERY IMPORTANT
+                past_df
             )
 
             signal = decision["decision"]

@@ -1,5 +1,4 @@
 from signals.rule_signals import generate_rule_signal
-from ai.ai_decisions import get_ai_signal
 
 def combine_decision(rule_score, ai_decision, ai_confidence):
     # Normalize rule score
@@ -23,49 +22,3 @@ def combine_decision(rule_score, ai_decision, ai_confidence):
 
     # Low confidence → trust rules
     return rule
-
-def generate_trade_decision(coin, row, df):
-    reasons = []
-
-    print(f"\nGenerate Signals----\n")
-    # 🔥 Technical signal
-    signal, score, signal_reasons = generate_rule_signal(row)
-    reasons.extend(signal_reasons)
-
-    print(f"\nAI Signaling...----\n")
-    # 🔥 AI decision
-    ai_result = get_ai_signal(coin, row)
-    ai_decision = ai_result.get("decision", "HOLD")
-    ai_confidence = ai_result.get("confidence", 0.5)
-
-    print(f"\nAI Signaling Finished...----\n")
-    # 🧠 Combine logic
-    score_total = 0
-
-    if signal == "BUY":
-        score_total += 1
-    elif signal == "SELL":
-        score_total -= 1
-
-    if ai_decision == "BUY":
-        score_total += ai_confidence
-    elif ai_decision == "SELL":
-        score_total -= ai_confidence
-
-    # 🎯 Final decision
-    if score_total > 0.5:
-        final_decision = "BUY"
-    elif score_total < -0.5:
-        final_decision = "SELL"
-    else:
-        final_decision = "HOLD"
-
-    return {
-        "decision": final_decision,
-        "confidence": round(min(abs(score_total) / 2, 1), 2),
-        "reasons": reasons,
-        "components": {
-            "signal": signal,
-            "ai": ai_decision
-        }
-    }

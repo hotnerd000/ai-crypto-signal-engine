@@ -1,5 +1,5 @@
 from analysis.market_analysis import run_market_analysis
-from analysis.multi_coin import analyze_multiple
+from analysis.multi_coin import run_multi_coin_analysis
 from analysis.ranking import rank_coins
 from ai import explain_coin
 from portfolio.portfolio import allocate_portfolio, apply_risk_management, generate_orders
@@ -9,7 +9,7 @@ from portfolio.positions import evaluate_position
 from backtest.backtest import Backtester, compute_performance_metrics
 
 from indicators.indicators import compute_indicators
-from strategy.trade_engine import generate_trade_decision
+from strategy.trade_decision import generate_trade_decision
 from utils.helpers import clear_screen
 
 
@@ -119,7 +119,7 @@ def multi_coin_mode():
 
     print("\nAnalyzing multiple coins...\n")
 
-    results = analyze_multiple(coins, days=30, future_days=7)
+    results = run_multi_coin_analysis(coins, days=30, future_days=7)
     ranked = rank_coins(results)
 
     print("\n=== COIN RANKING ===\n")

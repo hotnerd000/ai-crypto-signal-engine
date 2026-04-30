@@ -34,7 +34,7 @@ def run_multi_coin_analysis(coins, days=30, future_days=7):
                 "avg_score": avg_score,
                 "expected_profit": trade["expected_profit_pct"],
                 "best_buy": trade["best_buy"],
-                "best_sell": trade["best_sell"]
+                "best_sell": trade["best_sell"],
                 "final_decision": final_decision,
                 "ai_confidence": ai["confidence"],
                 "volatility": volatility
