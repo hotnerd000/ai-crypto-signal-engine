@@ -1,7 +1,6 @@
-from signals.signal_engine import generate_signal
+from strategy.decision_engine import decide_action
 
-
-def project_future(df, days_ahead=7):
+def project_future(coin, df, days_ahead=7):
     last_row = df.iloc[-1]
 
     price = float(last_row["price"])
@@ -29,15 +28,15 @@ def project_future(df, days_ahead=7):
             "ma": ma
         }
 
-        signal, score, reasons = generate_signal(simulated_row)
+        decision = decide_action(coin, simulated_row, df.iloc[:])
 
         results.append({
             "day": i,
             "price": price,
             "rsi": rsi,
-            "signal": signal,
-            "score": score,
-            "reasons": reasons
+            "signal": decision["decision"],
+            "score": decision["confidence"],
+            "reasons": decision["reasons"]
         })
 
     return results
