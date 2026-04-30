@@ -1,8 +1,8 @@
 from analyzer import analyze_with_forecast
-from ai_decision import get_ai_decision
-from decision_engine import combine_decision
-from data_fetch import get_price_series
-from risk import calculate_volatility
+from ai.ai_decision import get_ai_decision
+from strategy.decision_engine import combine_decision
+from data.data_fetch import get_price_series
+from portfolio.risk import calculate_volatility
 
 def analyze_multiple(coins, days=30, future_days=7):
     results = []

@@ -1,4 +1,4 @@
-from signal_engine import generate_signal
+from signals.signal_engine import generate_signal
 
 
 def project_future(df, days_ahead=7):

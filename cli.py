@@ -1,16 +1,15 @@
-from analyzer import analyze_with_forecast
-from multi_coin import analyze_multiple
-from ranking import rank_coins
-from ai_explainer import explain_coin
+from analysis.analyzer import analyze_with_forecast
+from analysis.multi_coin import analyze_multiple
+from analysis.ranking import rank_coins
+from ai.ai_explainer import explain_coin
 from portfolio import allocate_portfolio, apply_risk_management, generate_orders
-from data_fetch import get_current_prices
-from positions import evaluate_position
+from data.data_fetch import get_current_prices
+from data.data_fetch import fetch_price_data
+from portfolio.positions import evaluate_position
 from backtest import Backtester, calculate_metrics
-from data_fetch import fetch_price_data
+
 from indicators import apply_indicators
-from signal_engine import generate_signal
-import os
-import subprocess
+from signals.signal_engine import generate_signal
 
 PREDEFINED_COINS = {
     "bitcoin": "BTC",
@@ -23,11 +22,6 @@ PREDEFINED_COINS = {
     "tron": "TRX"
 }
 
-def clear_screen():
-    if os.name == "nt":
-        subprocess.run(["cls"], shell=True)
-    else:
-        subprocess.run(["clear"])
 
 def single_mode():
     # 🔥 Show available coins
@@ -51,7 +45,10 @@ def single_mode():
             print("Invalid selection. Defaulting to bitcoin.")
             coin = "bitcoin"
     else:
-        coin = user_input if user_input in PREDEFINED_COINS else "bitcoin"
+        coin = user_input
+        if coin not in PREDEFINED_COINS:
+            print("Unknown coin. Defaulting to bitcoin.")
+            coin = "bitcoin"
 
     # 🔥 Other inputs
     try:

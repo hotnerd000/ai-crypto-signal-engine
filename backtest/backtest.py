@@ -1,6 +1,6 @@
 import pandas as pd
 from indicators import apply_indicators
-from signal_engine import generate_signal
+from signals.signal_engine import generate_signal
 
 
 class Backtester:

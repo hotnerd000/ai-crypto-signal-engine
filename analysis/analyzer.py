@@ -1,7 +1,7 @@
-from data_fetch import fetch_price_data
+from data.data_fetch import fetch_price_data
 from indicators import apply_indicators
-from signal_engine import generate_signal
-from forecast import project_future
+from signals.signal_engine import generate_signal
+from forecasting.forecast import project_future
 from strategy import find_best_trade
 
 
