@@ -1,4 +1,4 @@
-from strategy.trade_engine import decide_action
+from strategy.trade_engine import generate_trade_decision
 
 def forecast_prices(coin, df, days_ahead=7):
     print(f"\nProject Future\n")
@@ -30,7 +30,7 @@ def forecast_prices(coin, df, days_ahead=7):
         }
 
         print(f"\nCalling Decide Action----\n")
-        decision = decide_action(coin, simulated_row, df.iloc[:])
+        decision = generate_trade_decision(coin, simulated_row, df.iloc[:])
 
         results.append({
             "day": i,

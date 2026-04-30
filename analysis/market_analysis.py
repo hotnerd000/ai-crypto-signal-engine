@@ -1,18 +1,18 @@
 from data.data_fetch import get_historical_prices
-from indicators.indicators import apply_indicators
-from signals.rule_signals import generate_signal
-from forecasting.price_forecast import project_future
+from indicators.indicators import compute_indicators
+from signals.rule_signals import generate_rule_signal
+from forecasting.price_forecast import forecast_prices
 from strategy.strategy import find_best_trade
 
 
 def analyze_coin(coin="bitcoin", days=30):
     df = get_historical_prices(coin, days)
-    df = apply_indicators(df)
+    df = compute_indicators(df)
 
     results = []
 
     for _, row in df.iterrows():
-        signal, score, reasons = generate_signal(row)
+        signal, score, reasons = generate_rule_signal(row)
 
         results.append({
             "date": row["timestamp"].strftime("%Y-%m-%d"),
@@ -28,12 +28,12 @@ def analyze_coin(coin="bitcoin", days=30):
 
 def run_market_analysis(coin="bitcoin", days=30, future_days=7):
     df = get_historical_prices(coin, days)
-    df = apply_indicators(df)
+    df = compute_indicators(df)
 
     historical = []
 
     for _, row in df.iterrows():
-        signal, score, reasons = generate_signal(row)
+        signal, score, reasons = generate_rule_signal(row)
 
         historical.append({
             "date": row["timestamp"].strftime("%Y-%m-%d"),
@@ -42,7 +42,7 @@ def run_market_analysis(coin="bitcoin", days=30, future_days=7):
         })
 
     
-    future = project_future(coin, df, future_days)
+    future = forecast_prices(coin, df, future_days)
     print(f"\nFind Beset Trade\n")
     trade = find_best_trade(future)
 

@@ -1,4 +1,4 @@
-from signals.rule_signals import generate_signal
+from signals.rule_signals import generate_rule_signal
 from ai.ai_decisions import get_ai_signal
 
 def combine_decision(rule_score, ai_decision, ai_confidence):
@@ -29,7 +29,7 @@ def generate_trade_decision(coin, row, df):
 
     print(f"\nGenerate Signals----\n")
     # 🔥 Technical signal
-    signal, score, signal_reasons = generate_signal(row)
+    signal, score, signal_reasons = generate_rule_signal(row)
     reasons.extend(signal_reasons)
 
     print(f"\nAI Signaling...----\n")

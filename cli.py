@@ -1,4 +1,4 @@
-from analysis.market_analysis import analyze_with_forecast
+from analysis.market_analysis import run_market_analysis
 from analysis.multi_coin import analyze_multiple
 from analysis.ranking import rank_coins
 from ai import explain_coin
@@ -6,11 +6,10 @@ from portfolio.portfolio import allocate_portfolio, apply_risk_management, gener
 from data.data_fetch import get_current_prices
 from data.data_fetch import get_historical_prices
 from portfolio.positions import evaluate_position
-from backtest.backtest import Backtester, calculate_metrics
+from backtest.backtest import Backtester, compute_performance_metrics
 
-from indicators.indicators import apply_indicators
-from signals.rule_signals import generate_signal
-from strategy.trade_engine import decide_action
+from indicators.indicators import compute_indicators
+from strategy.trade_engine import generate_trade_decision
 from utils.helpers import clear_screen
 
 
@@ -70,11 +69,11 @@ def run_single_analysis():
     print("\n--- CURRENT DECISION ---\n")
 
     df = get_historical_prices(coin, days)
-    df = apply_indicators(df)
+    df = compute_indicators(df)
 
     latest_row = df.iloc[-1]
 
-    decision = decide_action(
+    decision = generate_trade_decision(
         coin=coin,
         row=latest_row,
         df=df
@@ -91,7 +90,7 @@ def run_single_analysis():
     print(f"\nFocasting...\n")
 
     # 🔥 Core analysis
-    historical, future, trade = analyze_with_forecast(
+    historical, future, trade = run_market_analysis(
         coin, days, future_days
     )
 
@@ -208,9 +207,9 @@ def run_backtest():
     df = get_historical_prices(coin, days)
 
     bt = Backtester(initial_balance=1000)
-    result = bt.run(df, coin)
+    result = bt.run_backtest(df, coin)
 
-    metrics = calculate_metrics(result)
+    metrics = compute_performance_metrics(result)
 
     print("\n=== BACKTEST RESULT ===\n")
 
@@ -230,7 +229,7 @@ def main():
     choice = input("Select: ").strip()
 
     if choice == "1":
-        single_mode()
+        run_single_analysis()
 
     elif choice == "2":
         multi_coin_mode()

@@ -1,6 +1,6 @@
 import pandas as pd
-from indicators.indicators import apply_indicators
-from strategy.trade_engine import decide_action
+from indicators.indicators import compute_indicators
+from strategy.trade_engine import generate_trade_decision
 
 class Backtester:
     def __init__(self, initial_balance=1000):
@@ -9,7 +9,7 @@ class Backtester:
         self.history = []
 
     def run_backtest(self, df, coin):
-        df = apply_indicators(df)
+        df = compute_indicators(df)
 
         for i, row in df.iterrows():
             price = float(row["price"])
@@ -18,7 +18,7 @@ class Backtester:
             # 🔥 ONLY past data (no leakage)
             past_df = df.iloc[:i+1]
 
-            decision = decide_action(
+            decision = generate_trade_decision(
                 coin,
                 row,
                 past_df,
