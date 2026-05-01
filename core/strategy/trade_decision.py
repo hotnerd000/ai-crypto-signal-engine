@@ -1,7 +1,9 @@
 from core.signals.rule_signals import generate_rule_signal
 from core.ai.ai_decisions import get_ai_signal
+from core.forecasting.price_forecast import forecast_prices
 
-def generate_trade_decision(coin, row, df):
+
+def generate_trade_decision(coin, row, df, future_days=7):
     """
     Generate final trade decision using:
     - Rule-based signals
@@ -28,6 +30,10 @@ def generate_trade_decision(coin, row, df):
     ai_decision = ai_result.get("decision", "HOLD")
     ai_confidence = ai_result.get("confidence", 0.5)
 
+    future = forecast_prices(df, future_days)
+    
+    future_score = sum(f["score"] for f in future)
+
     print(f"\nAI Signaling Finished...----\n")
     # 🔥 3. Combine logic (weighted)
     score_total = 0
@@ -44,6 +50,9 @@ def generate_trade_decision(coin, row, df):
     elif ai_decision == "SELL":
         score_total -= ai_confidence
 
+    # 🔹 Consider future score
+    score_total = score + future_score * 0.1
+
     # 🔥 4. Final decision thresholds
     if score_total > 0.5:
         final_decision = "BUY"
@@ -53,12 +62,13 @@ def generate_trade_decision(coin, row, df):
         final_decision = "HOLD"
 
     # 🔥 5. Confidence calculation
-    confidence = min(abs(score_total) / 2, 1)
+    confidence = round(min(abs(score_total) / 2, 1), 2)
 
     return {
         "decision": final_decision,
-        "confidence": round(min(abs(score_total) / 2, 1), 2),
+        "confidence": confidence,
         "reasons": reasons,
+        "future_bias": future_score,
         "components": {
             "rule_signal": signal,
             "ai_signal": ai_decision,
