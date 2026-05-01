@@ -1,5 +1,5 @@
-from signals.rule_signals import generate_rule_signal
-from ai.ai_decisions import get_ai_signal
+from core.signals.rule_signals import generate_rule_signal
+from core.ai.ai_decisions import get_ai_signal
 
 def generate_trade_decision(coin, row, df):
     """

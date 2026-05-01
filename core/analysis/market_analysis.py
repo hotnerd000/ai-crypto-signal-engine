@@ -1,8 +1,8 @@
-from data.data_fetch import get_historical_prices
-from indicators.indicators import compute_indicators
-from signals.rule_signals import generate_rule_signal
-from forecasting.price_forecast import forecast_prices
-from strategy.strategy import find_best_trade
+from core.data.data_fetch import get_historical_prices
+from core.indicators.indicators import compute_indicators
+from core.signals.rule_signals import generate_rule_signal
+from core.forecasting.price_forecast import forecast_prices
+from core.strategy.strategy import find_best_trade
 
 
 def analyze_coin(coin="bitcoin", days=30):

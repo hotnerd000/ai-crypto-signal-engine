@@ -1,15 +1,15 @@
-from analysis.market_analysis import run_market_analysis
-from analysis.multi_coin import run_multi_coin_analysis
-from analysis.ranking import rank_coins
-from ai import explain_coin
-from portfolio.portfolio import allocate_portfolio, apply_risk_management, generate_orders
+from core.analysis.market_analysis import run_market_analysis
+from core.analysis.multi_coin import run_multi_coin_analysis
+from core.analysis.ranking import rank_coins
+from core.ai import explain_coin
+from core.portfolio.portfolio import allocate_portfolio, apply_risk_management, generate_orders
 from core.data.data_fetch import get_current_prices
 from core.data.data_fetch import get_historical_prices
-from portfolio.positions import evaluate_position
-from backtest.backtest import Backtester, compute_performance_metrics
+from core.portfolio.positions import evaluate_position
+from core.backtest.backtest import Backtester, compute_performance_metrics
 
-from indicators.indicators import compute_indicators
-from strategy.trade_decision import generate_trade_decision
+from core.indicators.indicators import compute_indicators
+from core.strategy.trade_decision import generate_trade_decision
 from utils.helpers import clear_screen
 
 

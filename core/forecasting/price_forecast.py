@@ -1,4 +1,4 @@
-from strategy.trade_decision import generate_trade_decision
+from core.strategy.trade_decision import generate_trade_decision
 
 def forecast_prices(coin, df, days_ahead=7):
     print(f"\nProject Future\n")

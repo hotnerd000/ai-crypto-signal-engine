@@ -1,6 +1,6 @@
 import pandas as pd
-from indicators.indicators import compute_indicators
-from strategy.trade_decision import generate_trade_decision
+from core.indicators.indicators import compute_indicators
+from core.strategy.trade_decision import generate_trade_decision
 
 class Backtester:
     def __init__(self, initial_balance=1000):
