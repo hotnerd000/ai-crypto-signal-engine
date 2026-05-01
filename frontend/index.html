@@ -4,6 +4,23 @@
     <title>AI Crypto Analyzer</title>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    .spinner {
+        width: 20px;
+        height: 20px;
+        border: 3px solid #ccc;
+        border-top: 3px solid #333;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    </style>
 </head>
 <body>
 
@@ -13,7 +30,7 @@
 <input id="days" placeholder="30" />
 <input id="future" placeholder="7" />
 
-<button onclick="analyze()">Analyze</button>
+<button data-original="Analyze" onclick="analyze()">Analyze</button>
 <p></p>
 
 <label>Backtest Days:</label>
@@ -22,8 +39,14 @@
 <label>Initial Balance:</label>
 <input id="bt_balance" value="1000" />
 
-<button onclick="runBacktest()">Run Backtest</button>
+<button data-original="Run Backtest" onclick="runBacktest()">Run Backtest</button>
+<p></p>
 <div id="error" style="color:red; margin-top:10px;"></div>
+
+<div id="loading" style="display:none; margin-top:10px;">
+    <div class="spinner"></div>
+    <span>Loading...</span>
+</div>
 
 <canvas id="priceChart" width="800" height="400"></canvas>
 

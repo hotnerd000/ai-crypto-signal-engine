@@ -1,10 +1,12 @@
 let chart;
 async function analyze() {
+    showLoading();
+    document.getElementById("error").textContent = "";
+
     try{
         const coin = document.getElementById("coin").value;
         const days = parseInt(document.getElementById("days").value || "30");
         const future = parseInt(document.getElementById("future").value || "7");
-        document.getElementById("error").textContent = "";
 
         const res = await fetch("http://localhost:8000/analyze", {
             method: "POST",
@@ -18,6 +20,11 @@ async function analyze() {
             })
         });
 
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || "Analyze failed");
+        }
+
         const data = await res.json();
 
         document.getElementById("output").textContent =
@@ -26,6 +33,8 @@ async function analyze() {
         renderChart(data.history);
     } catch(err) {
         showError(err.message);
+    }  finally {
+        hideLoading();   // 🔥 always runs
     }
     
 }
@@ -124,6 +133,9 @@ function renderChart(history) {
 }
 
 async function runBacktest() {
+    showLoading();
+    document.getElementById("error").textContent = "";
+
     try{
         const coin = document.getElementById("coin").value;
 
@@ -134,7 +146,6 @@ async function runBacktest() {
         const balance = parseFloat(
             document.getElementById("bt_balance").value || "1000"
         );
-        document.getElementById("error").textContent = "";
 
         const res = await fetch("http://localhost:8000/backtest", {
             method: "POST",
@@ -148,6 +159,11 @@ async function runBacktest() {
             })
         });
 
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || "Backtest failed");
+        }
+
         const data = await res.json();
 
         console.log("Backtest result:", data);
@@ -155,6 +171,8 @@ async function runBacktest() {
         renderBacktestChart(data.history, data.trades);
     }  catch (err) {
         showError(err.message);
+    }   finally {
+        hideLoading();   // 🔥 always runs
     }
 
 }
@@ -232,4 +250,21 @@ function renderBacktestChart(history, trades) {
 
 function showError(message) {
     document.getElementById("error").textContent = message;
+}
+
+function showLoading() {
+    document.getElementById("loading").style.display = "block";
+    disableButtons(true);
+}
+
+function hideLoading() {
+    document.getElementById("loading").style.display = "none";
+    disableButtons(false);
+}
+
+function disableButtons(disabled) {
+    document.querySelectorAll("button").forEach(btn => {
+        btn.disabled = disabled;
+         btn.textContent = disabled ? "Processing..." : btn.dataset.original || btn.textContent;
+    });
 }
