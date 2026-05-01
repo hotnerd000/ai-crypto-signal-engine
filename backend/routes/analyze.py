@@ -5,6 +5,7 @@ from core.analysis.market_analysis import run_market_analysis
 from core.data.data_fetch import get_historical_prices
 from core.indicators.indicators import compute_indicators
 from core.strategy.trade_decision import generate_trade_decision
+from core.signals.rule_signals import generate_rule_signal
 
 router = APIRouter()
 
@@ -33,6 +34,13 @@ def analyze(req: AnalyzeRequest):
     historical, future, trade = run_market_analysis(
         coin, days, future_days
     )
+
+    signals = []
+    for _, row in df.iterrows():
+        signal, _, _ = generate_rule_signal(row)
+        signals.append(signal)
+    
+    df["signal"] = signals
 
     return {
         "coin": coin,

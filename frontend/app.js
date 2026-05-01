@@ -28,6 +28,7 @@ function renderChart(history) {
     const labels = history.map(d => new Date(d.timestamp).toLocaleDateString());
     const prices = history.map(d => d.price);
     const ma = history.map(d => d.ma);
+    const signals = history.map(d => d.signal);
 
     const ctx = document.getElementById("priceChart").getContext("2d");
 
@@ -50,6 +51,18 @@ function renderChart(history) {
                     label: "MA",
                     data: ma,
                     borderWidth: 2
+                },
+                {
+                    label: "BUY Signals",
+                    data: history.map(d => d.signal === "BUY" ? d.price : null),
+                    pointRadius: 5,
+                    showLine: false
+                },
+                {
+                    label: "SELL Signals",
+                    data: history.map(d => d.signal === "SELL" ? d.price : null),
+                    pointRadius: 5,
+                    showLine: false
                 }
             ]
         },
