@@ -53,16 +53,30 @@ function renderChart(history) {
                     borderWidth: 2
                 },
                 {
-                    label: "BUY Signals",
+                    label: "BUY",
                     data: history.map(d => d.signal === "BUY" ? d.price : null),
-                    pointRadius: 5,
-                    showLine: false
+                    showLine: false,
+
+                    pointStyle: "triangle",
+                    rotation: 0,              // ▲ (up)
+                    pointRadius: 8,
+                    pointHoverRadius: 10,
+
+                    backgroundColor: "green",
+                    borderColor: "green"
                 },
                 {
-                    label: "SELL Signals",
+                    label: "SELL",
                     data: history.map(d => d.signal === "SELL" ? d.price : null),
-                    pointRadius: 5,
-                    showLine: false
+                    showLine: false,
+
+                    pointStyle: "triangle",
+                    rotation: 180,            // ▼ (down)
+                    pointRadius: 8,
+                    pointHoverRadius: 10,
+
+                    backgroundColor: "red",
+                    borderColor: "red"
                 },
                 {
                     label: "ALL SIGNAL POINTS",
@@ -81,6 +95,13 @@ function renderChart(history) {
             plugins: {
                 legend: {
                     display: true
+                },
+                 tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label} @ ${context.raw.toFixed(2)}`;
+                        }
+                    }
                 }
             },
             scales: {
@@ -90,7 +111,8 @@ function renderChart(history) {
                 y: {
                     display: true
                 }
-            }
+            },
+            borderWidth: 2
         }
     });
 }
