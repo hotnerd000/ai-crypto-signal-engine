@@ -38,5 +38,6 @@ def analyze(req: AnalyzeRequest):
         "coin": coin,
         "decision": decision,
         "future": future,
-        "trade": trade
+        "trade": trade,
+        "history": df.to_dict(orient="records") 
     }

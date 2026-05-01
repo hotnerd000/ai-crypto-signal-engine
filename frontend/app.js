@@ -1,3 +1,4 @@
+let chart;
 async function analyze() {
     const coin = document.getElementById("coin").value;
     const days = parseInt(document.getElementById("days").value || "30");
@@ -19,4 +20,58 @@ async function analyze() {
 
     document.getElementById("output").textContent =
         JSON.stringify(data, null, 2);
+
+    renderChart(data.history);
+}
+
+function renderChart(history) {
+    const labels = history.map(d => new Date(d.timestamp).toLocaleDateString());
+    const prices = history.map(d => d.price);
+    const ma = history.map(d => d.ma);
+
+    const ctx = document.getElementById("priceChart").getContext("2d");
+
+    // destroy old chart
+    if (chart) {
+        chart.destroy();
+    }
+
+    chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Price",
+                    data: prices,
+                    borderWidth: 2
+                },
+                {
+                    label: "MA",
+                    data: ma,
+                    borderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: "index",
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                x: {
+                    display: true
+                },
+                y: {
+                    display: true
+                }
+            }
+        }
+    });
 }
