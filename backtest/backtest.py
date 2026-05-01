@@ -7,6 +7,7 @@ class Backtester:
         self.balance = initial_balance
         self.positions = {}  # coin → {entry_price, quantity}
         self.history = []
+        self.trades = []
 
     def run_backtest(self, df, coin):
         df = compute_indicators(df)
@@ -23,12 +24,12 @@ class Backtester:
                 row,
                 past_df
             )
-
             signal = decision["decision"]
+            confidence = decision["confidence"]
 
             # 🔥 BUY logic
             if signal == "BUY" and coin not in self.positions:
-                allocation = self.balance * 0.2  # 20% per trade
+                allocation = self.balance * (0.1 + 0.4 * confidence)
                 quantity = allocation / price
 
                 self.positions[coin] = {
@@ -38,18 +39,38 @@ class Backtester:
 
                 self.balance -= allocation
 
+                self.trades.append({
+                    "type": "BUY",
+                    "price": price,
+                    "date": date,
+                    "confidence": confidence
+                })
+
             # 🔥 SELL logic
             elif signal == "SELL" and coin in self.positions:
                 position = self.positions[coin]
-                value = position["quantity"] * price
+                entry_price = position["entry_price"]
 
-                self.balance += value
-                del self.positions[coin]
+                pnl_pct = (price - entry_price) / entry_price
+
+                # 🔥 Optional filter (avoid bad sells)
+                if pnl_pct > -0.05:  # don’t panic sell too early
+                    value = position["quantity"] * price
+
+                    self.balance += value
+                    del self.positions[coin]
+
+                    self.trades.append({
+                        "type": "SELL",
+                        "price": price,
+                        "date": date,
+                        "pnl_pct": pnl_pct
+                    })
 
             # 🔥 Track portfolio value
             portfolio_value = self.balance
-
-            portfolio_value += sum(p["quantity"] * price for p in self.positions.values())
+            for pos in self.positions.values():
+                portfolio_value += pos["quantity"] * price
             
             self.history.append({
                 "date": date,
@@ -62,6 +83,7 @@ class Backtester:
         return pd.DataFrame(self.history)
     
 def compute_performance_metrics(df):
+    print('DF---', df)
     returns = df["portfolio_value"].pct_change().dropna()
 
     total_return = (df["portfolio_value"].iloc[-1] / df["portfolio_value"].iloc[0]) - 1
