@@ -1,4 +1,6 @@
 let chart;
+let equityChart;
+
 async function analyze() {
     showLoading();
     document.getElementById("error").textContent = "";
@@ -169,6 +171,8 @@ async function runBacktest() {
         console.log("Backtest result:", data);
 
         renderBacktestChart(data.history, data.trades);
+        renderMetrics(data.metrics);
+        renderEquityChart(data.history);
     }  catch (err) {
         showError(err.message);
     }   finally {
@@ -246,6 +250,71 @@ function renderBacktestChart(history, trades) {
             }
         }
     });
+}
+
+function renderEquityChart(history) {
+    const labels = history.map(d =>
+        new Date(d.date).toLocaleDateString()
+    );
+
+    const equity = history.map(d => d.portfolio_value);
+
+    const ctx = document.getElementById("equityChart").getContext("2d");
+
+    if (equityChart) equityChart.destroy();
+
+    equityChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Portfolio Value",
+                    data: equity,
+                    borderWidth: 2,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `$${context.raw.toFixed(2)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+}
+
+function renderMetrics(metrics) {
+    document.getElementById("metrics").style.display = "block";
+
+    const ret = metrics.total_return_pct.toFixed(2);
+    const win = metrics.win_rate.toFixed(2);
+    const dd = metrics.max_drawdown_pct.toFixed(2);
+
+    const returnEl = document.getElementById("return");
+    const winEl = document.getElementById("winrate");
+    const ddEl = document.getElementById("drawdown");
+
+    returnEl.textContent = "📈 " + ret + "%";
+    winEl.textContent = "🎯 " + win + "%";
+    ddEl.textContent = "📉 " + dd + "%";
+
+    // 🎨 Color logic
+    returnEl.style.color = ret >= 0 ? "green" : "red";
+    returnEl.style.fontWeight = ret > 20 ? "bold" : "normal";
+    ddEl.style.color = dd < 0 ? "red" : "green";
 }
 
 function showError(message) {

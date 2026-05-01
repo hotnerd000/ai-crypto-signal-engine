@@ -20,39 +20,86 @@
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
+
+    .metrics-container {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .metric-card {
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        min-width: 120px;
+    }
+
+    .metric-card span {
+        display: block;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .metric-card strong {
+        font-size: 18px;
+    }
+
     </style>
 </head>
 <body>
 
-<h2>AI Crypto Analyzer</h2>
+    <h2>AI Crypto Analyzer</h2>
 
-<input id="coin" placeholder="bitcoin" />
-<input id="days" placeholder="30" />
-<input id="future" placeholder="7" />
+    <input id="coin" placeholder="bitcoin" />
+    <input id="days" placeholder="30" />
+    <input id="future" placeholder="7" />
 
-<button data-original="Analyze" onclick="analyze()">Analyze</button>
-<p></p>
+    <button data-original="Analyze" onclick="analyze()">Analyze</button>
+    <p></p>
 
-<label>Backtest Days:</label>
-<input id="bt_days" value="90" />
+    <label>Backtest Days:</label>
+    <input id="bt_days" value="90" />
 
-<label>Initial Balance:</label>
-<input id="bt_balance" value="1000" />
+    <label>Initial Balance:</label>
+    <input id="bt_balance" value="1000" />
 
-<button data-original="Run Backtest" onclick="runBacktest()">Run Backtest</button>
-<p></p>
-<div id="error" style="color:red; margin-top:10px;"></div>
+    <button data-original="Run Backtest" onclick="runBacktest()">Run Backtest</button>
+    <p></p>
+    <div id="error" style="color:red; margin-top:10px;"></div>
 
-<div id="loading" style="display:none; margin-top:10px;">
-    <div class="spinner"></div>
-    <span>Loading...</span>
-</div>
+    <div id="loading" style="display:none; margin-top:10px;">
+        <div class="spinner"></div>
+        <span>Loading...</span>
+    </div>
 
-<canvas id="priceChart" width="800" height="400"></canvas>
+    <div id="metrics" style="display:none; margin-top:15px;">
+        <h3>Backtest Performance</h3>
 
-<pre id="output"></pre>
+        <div class="metrics-container">
+            <div class="metric-card">
+                <span>Total Return</span>
+                <strong id="return"></strong>
+            </div>
 
-<script src="app.js"></script>
+            <div class="metric-card">
+                <span>Win Rate</span>
+                <strong id="winrate"></strong>
+            </div>
+
+            <div class="metric-card">
+                <span>Max Drawdown</span>
+                <strong id="drawdown"></strong>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="priceChart" width="800" height="400"></canvas>
+    <h3>Equity Curve</h3>
+    <canvas id="equityChart" width="800" height="300"></canvas>
+
+    <pre id="output"></pre>
+
+    <script src="app.js"></script>
 
 </body>
 </html>
