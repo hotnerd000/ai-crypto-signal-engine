@@ -14,6 +14,17 @@
 <input id="future" placeholder="7" />
 
 <button onclick="analyze()">Analyze</button>
+<p></p>
+
+<label>Backtest Days:</label>
+<input id="bt_days" value="90" />
+
+<label>Initial Balance:</label>
+<input id="bt_balance" value="1000" />
+
+<button onclick="runBacktest()">Run Backtest</button>
+<div id="error" style="color:red; margin-top:10px;"></div>
+
 <canvas id="priceChart" width="800" height="400"></canvas>
 
 <pre id="output"></pre>
