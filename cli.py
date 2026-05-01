@@ -3,8 +3,8 @@ from analysis.multi_coin import run_multi_coin_analysis
 from analysis.ranking import rank_coins
 from ai import explain_coin
 from portfolio.portfolio import allocate_portfolio, apply_risk_management, generate_orders
-from data.data_fetch import get_current_prices
-from data.data_fetch import get_historical_prices
+from core.data.data_fetch import get_current_prices
+from core.data.data_fetch import get_historical_prices
 from portfolio.positions import evaluate_position
 from backtest.backtest import Backtester, compute_performance_metrics
 
