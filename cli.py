@@ -208,7 +208,7 @@ def run_backtest():
 
     bt = Backtester(initial_balance=1000)
     result = bt.run_backtest(df, coin)
-
+    print('Result--:', result)
     metrics = compute_performance_metrics(result)
 
     print("\n=== BACKTEST RESULT ===\n")

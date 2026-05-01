@@ -49,9 +49,8 @@ class Backtester:
             # 🔥 Track portfolio value
             portfolio_value = self.balance
 
-            for pos in self.positions.items():
-                portfolio_value += pos["quantity"] * price
-
+            portfolio_value += sum(p["quantity"] * price for p in self.positions.values())
+            
             self.history.append({
                 "date": date,
                 "price": price,

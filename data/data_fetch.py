@@ -5,9 +5,10 @@ def get_historical_prices(coin="bitcoin", days=30):
     url = f"https://api.coingecko.com/api/v3/coins/{coin}/market_chart?vs_currency=usd&days={days}"
     
     print(f"\nFetching price data {coin.upper()}...\n")
+
     res = requests.get(url, timeout=10)
     data = res.json()
-    print('Data---', data)
+    # print('Data---', data)
     prices = data["prices"]
 
     df = pd.DataFrame(prices, columns=["timestamp", "price"])
