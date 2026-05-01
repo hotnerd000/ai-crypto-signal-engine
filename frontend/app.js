@@ -63,6 +63,12 @@ function renderChart(history) {
                     data: history.map(d => d.signal === "SELL" ? d.price : null),
                     pointRadius: 5,
                     showLine: false
+                },
+                {
+                    label: "ALL SIGNAL POINTS",
+                    data: history.map(d => d.price),
+                    pointRadius: 2,
+                    showLine: false
                 }
             ]
         },

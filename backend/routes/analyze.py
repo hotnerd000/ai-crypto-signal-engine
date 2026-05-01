@@ -37,7 +37,8 @@ def analyze(req: AnalyzeRequest):
 
     signals = []
     for _, row in df.iterrows():
-        signal, _, _ = generate_rule_signal(row)
+        decision = generate_trade_decision(coin, row, df)
+        signal = decision["decision"]
         signals.append(signal)
     
     df["signal"] = signals
