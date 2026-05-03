@@ -2,8 +2,9 @@
 
 import time
 from datetime import datetime
-
 from core.data.data_adapter import fetch_price_data
+import asyncio
+from backend.ws_manager import manager, send_ws_message
 
 class AutoTraderBot:
     def __init__(self, config, portfolio, execution_engine, strategy_engine):
@@ -48,6 +49,13 @@ class AutoTraderBot:
                 }
 
                 value = self.portfolio.get_value(prices)
+
+                send_ws_message({
+                    "type": "portfolio_update",
+                    "value": value,
+                    "asset": self.portfolio.current_asset,
+                    "timestamp": str(datetime.now())
+                })
                 self.portfolio.log_state(datetime.now(), value)
 
                 print(f"[BOT] Value: {value:.2f}, Asset: {self.portfolio.current_asset}")

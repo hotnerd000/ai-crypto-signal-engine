@@ -1,4 +1,5 @@
-# core/bot/execution_engine.py
+from backend.ws_manager import send_ws_message
+from datetime import datetime
 
 class ExecutionEngine:
     def __init__(self, fee=0.001):
@@ -10,14 +11,24 @@ class ExecutionEngine:
         if amount == 0:
             return False
 
-        # Apply fee
-        net_amount = amount * (1 - self.fee)
+        fee = self.fee
+        net_amount = amount * (1 - fee)
 
-        # Convert
         converted = net_amount / price
 
+        # ✅ update balances
         bot_portfolio.balances[from_asset] = 0
         bot_portfolio.balances[to_asset] = converted
         bot_portfolio.current_asset = to_asset
+
+        # ✅ 🔥 PUT IT RIGHT HERE
+        send_ws_message({
+            "type": "trade",
+            "from": from_asset,
+            "to": to_asset,
+            "price": price,
+            "timestamp": str(datetime.now())
+        })
+
 
         return True

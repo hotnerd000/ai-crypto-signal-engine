@@ -5,6 +5,7 @@ from backend.routes.analyze import router as analyze_router
 from backend.routes.portfolio import router as portfolio_router
 from backend.routes.backtest import router as backtest_router
 from backend.routes.analyze import router as bot_router
+from backend.routes.ws import router as ws_router
 
 app = FastAPI()
 
@@ -20,3 +21,4 @@ app.include_router(analyze_router)
 app.include_router(portfolio_router)
 app.include_router(backtest_router)
 app.include_router(bot_router)
+app.include_router(ws_router)

@@ -1,6 +1,22 @@
 let chart;
 let equityChart;
 
+const ws = new WebSocket("ws://localhost:8000/ws");
+
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    if (data.type === "portfolio_update") {
+        console.log("Portfolio:", data.value);
+        // update UI
+    }
+
+    if (data.type === "trade") {
+        console.log("Trade:", data);
+        // show trade notification
+    }
+};
+
 async function analyze() {
     showLoading();
     document.getElementById("error").textContent = "";
