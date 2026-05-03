@@ -31,6 +31,9 @@ class AutoTraderBot:
                 df_A = fetch_price_data(coin_A)
                 df_B = fetch_price_data(coin_B)
 
+                print("df_A: ", df_A)
+                print("df_B: ", df_B)
+
                 # 2. Analyze
                 decision_A = self.strategy.analyze(coin_A, df_A)
                 decision_B = self.strategy.analyze(coin_B, df_B)
@@ -47,6 +50,7 @@ class AutoTraderBot:
                     coin_A: df_A.iloc[-1]["price"],
                     coin_B: df_B.iloc[-1]["price"]
                 }
+                print("Bot Prices:  ", prices)
 
                 value = self.portfolio.get_value(prices)
 
@@ -64,7 +68,7 @@ class AutoTraderBot:
 
             except Exception as e:
                 print(f"[ERROR] {e}")
-                time.sleep(5)
+                time.sleep(10)
 
     def _handle_switch(self, coin_A, coin_B, dA, dB, df_A, df_B):
 
@@ -79,8 +83,11 @@ class AutoTraderBot:
 
         current = self.portfolio.current_asset
 
+        action_A = dA.get("decision")
+        action_B = dB.get("decision")
+
         # Switch logic
-        if dA["action"] == "BUY" and current != coin_A:
+        if action_A == "BUY" and current != coin_A:
             self.execution.execute_trade(
                 self.portfolio,
                 current,
@@ -88,7 +95,7 @@ class AutoTraderBot:
                 price_A
             )
 
-        elif dB["action"] == "BUY" and current != coin_B:
+        elif action_B == "BUY" and current != coin_B:
             self.execution.execute_trade(
                 self.portfolio,
                 current,

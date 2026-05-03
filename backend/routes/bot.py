@@ -21,14 +21,17 @@ def start_bot():
     config = TradeConfig(
         coin_pair=["bitcoin", "ethereum"]
     )
-
+    print("TradeCONfig----")
+    
     portfolio = BotPortfolio(config.initial_balance)
     execution = ExecutionEngine()
     strategy = StrategyEngine(config)
+    print("Strategy Engine----")
 
     bot_instance = AutoTraderBot(
         config, portfolio, execution, strategy
     )
+    print("Before Threading----")
 
     # Run in background (important!)
     import threading

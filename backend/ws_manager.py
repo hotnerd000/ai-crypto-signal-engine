@@ -20,4 +20,8 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 def send_ws_message(data: dict):
+    print("📡 Sending WS:", data)
+    if not manager.active_connections:
+        print("⚠️ No active WS clients")
+        return
     asyncio.run(manager.broadcast(data))

@@ -1,7 +1,7 @@
 from analysis.market_analysis import run_market_analysis
 from ai.ai_decisions import get_ai_portfolio_signal
 from strategy.trade_engine import combine_decision
-from data.data_fetch import get_price_series
+from core.data.data_fetch import get_price_series
 from portfolio.risk import calculate_volatility
 
 def run_multi_coin_analysis(coins, days=30, future_days=7):
