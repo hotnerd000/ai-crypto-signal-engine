@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.routes.analyze import router as analyze_router
 from backend.routes.portfolio import router as portfolio_router
 from backend.routes.backtest import router as backtest_router
-from backend.routes.analyze import router as bot_router
+from backend.routes.bot import router as bot_router
 from backend.routes.ws import router as ws_router
 
 app = FastAPI()

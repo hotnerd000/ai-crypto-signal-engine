@@ -5,6 +5,7 @@ router = APIRouter()
 
 @router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
+    print("🔌 WebSocket connection attempt")
     await manager.connect(websocket)
 
     try:
