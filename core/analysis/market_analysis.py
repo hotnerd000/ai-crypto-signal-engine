@@ -42,7 +42,7 @@ def run_market_analysis(coin="bitcoin", days=30, future_days=7):
         })
 
     
-    future = forecast_prices(coin, df, future_days)
+    future = forecast_prices(df, future_days)
     print(f"\nFind Beset Trade\n")
     trade = find_best_trade(future)
 

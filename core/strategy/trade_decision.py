@@ -51,7 +51,7 @@ def generate_trade_decision(coin, row, df, future_days=7):
         score_total -= ai_confidence
 
     # 🔹 Consider future score
-    score_total = score + future_score * 0.1
+    score_total += future_score * 0.1
 
     # 🔥 4. Final decision thresholds
     if score_total > 0.5:

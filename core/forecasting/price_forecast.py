@@ -1,6 +1,6 @@
-from core.strategy.trade_decision import generate_trade_decision
+from core.strategy.trade_decision import generate_rule_signal
 
-def forecast_prices(coin, df, days_ahead=7):
+def forecast_prices(df, days_ahead=7):
     print(f"\nProject Future\n")
     last_row = df.iloc[-1]
 
@@ -30,15 +30,15 @@ def forecast_prices(coin, df, days_ahead=7):
         }
 
         print(f"\nCalling Decide Action----\n")
-        decision = generate_trade_decision(coin, simulated_row, df.iloc[:])
+        signal, score, reasons = generate_rule_signal(simulated_row)
 
         results.append({
             "day": i,
             "price": price,
             "rsi": rsi,
-            "signal": decision["decision"],
-            "score": decision["confidence"],
-            "reasons": decision["reasons"]
+            "signal": signal,
+            "score": score,
+            "reasons": reasons
         })
 
     return results
