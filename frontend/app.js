@@ -8,12 +8,21 @@ ws.onmessage = (event) => {
 
     if (data.type === "portfolio_update") {
         console.log("Portfolio:", data.value);
-        // update UI
+        
+        document.getElementById("portfolio").innerText =
+            `$${data.value.toFixed(2)}`;
+        document.getElementById("asset").innerText = data.asset;
     }
 
     if (data.type === "trade") {
         console.log("Trade:", data);
-        // show trade notification
+        
+        const log = document.getElementById("trades");
+
+        const item = document.createElement("li");
+        item.innerText = `Switched ${data.from} → ${data.to} at ${data.price}`;
+
+        log.prepend(item);
     }
 };
 
