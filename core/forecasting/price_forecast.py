@@ -1,4 +1,4 @@
-from core.strategy.trade_decision import generate_rule_signal
+from core.signals.rule_signals import generate_rule_signal
 
 def forecast_prices(df, days_ahead=7):
     print(f"\nProject Future\n")
