@@ -20,10 +20,7 @@ class StrategyEngine:
             coin=coin,
             row=df.iloc[-1],
             df=df,
-            config={
-                "use_ai": self.config.use_ai,
-                "forecast": forecast
-            }
+            future_days=7
         )
 
         return decision

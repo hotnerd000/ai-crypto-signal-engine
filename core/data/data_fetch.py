@@ -4,7 +4,7 @@ import pandas as pd
 def get_historical_prices(coin="bitcoin", days=30):
     url = f"https://api.coingecko.com/api/v3/coins/{coin}/market_chart?vs_currency=usd&days={days}"
     
-    print(f"\nFetching price data {coin.upper()}...\n")
+    print(f"\nFetching price data {coin.upper()} for {days} days...\n")
 
     res = requests.get(url, timeout=10)
     data = res.json()
